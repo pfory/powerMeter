@@ -5,7 +5,7 @@
 //  +12V - elektromer - odpor - D2 - odpor - GND
 
 //  indikacni LED
-//  D3 - 220 ohm - LED anoda - LED katoda - GND
+//  D13
 
 //---------------------------------------------------------------
 //         Arduino   
@@ -24,7 +24,7 @@ unsigned long startPulse=0;
 unsigned int pulseLength=0;
 unsigned int pulseCount=0;
 
-#define STATUS_LED 3
+#define STATUS_LED 13
 
 #define watchdog
 #ifdef watchdog
@@ -33,7 +33,7 @@ unsigned int pulseCount=0;
 
 #include <Wire.h>
 
-float versionSW=0.1;
+float versionSW=0.2;
 char versionSWString[] = "energyMeter v"; //SW name & version
 
 byte status=0;
@@ -64,6 +64,7 @@ void setup() {
 
   pinMode(counterPin, INPUT);      
   attachInterrupt(counterInterrupt, counterISR, CHANGE);
+  digitalWrite(STATUS_LED,LOW);
 }
 
 //------------------------------------------------------------ L O O P -----------------------------------------------------------------------
@@ -83,6 +84,7 @@ void counterISR() {
     pulseLength = millis()-startPulse;
     if ((pulseLength)>35 && (pulseLength)<100) {
       pulseCount++;
+      Serial.println("Pulse");
     }
   }
 }
@@ -91,6 +93,8 @@ void counterISR() {
 // this function is registered as an event, see setup()
 void getPulseCount()
 {
-  Wire.write(pulseCount); 
-  pulseCount=0;
+  if (pulseCount>0) {
+    Wire.write(pulseCount); 
+    pulseCount=0;
+  }
 }

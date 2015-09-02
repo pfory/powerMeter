@@ -10,7 +10,7 @@
 //---------------------------------------------------------------
 //         Arduino   
 //         D2                   interrupt od elektromeru
-//         D3                   LED indikujici impulsy
+//         D13                  LED indikujici impulsy
 //---------------------------------------------------------------
 
 //  version history
@@ -96,5 +96,7 @@ void getPulseCount()
   if (pulseCount>0) {
     Wire.write(pulseCount); 
     pulseCount=0;
+  } else {
+    Wire.write("-"); 
   }
 }

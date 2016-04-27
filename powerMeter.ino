@@ -94,7 +94,9 @@ void counterISR() {
 void getPulseCount()
 {
   if (pulseCount>0) {
-    Wire.write(pulseCount); 
+    char buffer[4];
+    itoa(pulseCount,buffer,10);
+    Wire.write(buffer); 
     pulseCount=0;
   } else {
     Wire.write("-"); 
